@@ -1,0 +1,49 @@
+{# users/user_detail.html #}
+{% extends 'base.html' %}
+{% load static %}  {# Добавлено для использования static, если нужны статические файлы (css, js) #}
+
+{% block content %}
+    <h1 class="text-center mb-4">Детали пользователя</h1>
+
+    <div class="container">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Информация о пользователе</h5>
+                <p class="card-text"><strong>Имя пользователя:</strong> {{ viewed_user.username }}</p>
+                <p class="card-text"><strong>Email:</strong> {{ viewed_user.email }}</p>
+                <p class="card-text"><strong>Дата регистрации:</strong> {{ viewed_user.date_joined }}</p>
+            </div>
+        </div>
+
+        <h2 class="text-center mb-3">Собаки пользователя:</h2>
+
+        <div id="dog-cards" class="row row-cols-1 row-cols-md-3 g-4">
+            {% for dog in dogs %}
+                <div class="col" id="dog-card-{{ dog.id }}">
+                    <div class="card h-100 d-flex flex-column">
+                        {% if dog.image %}
+                            <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top" style="background-color: #f8f9fa; height: 200px;"></div>
+                        {% endif %}
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-2">{{ dog.name }}</h5>
+                                <p class="card-text mb-2"><small>Порода: {% if dog.breed %}{{ dog.breed.name }}{% else %}Не указана{% endif %}</small></p>  {# Обработка отсутствия породы #}
+                                <p class="card-text mb-2"><small>Возраст: {{ dog.age }} лет</small></p>
+                                <p class="card-text mb-2">{{ dog.description }}</p>
+                            </div>
+                            <div class="mt-auto">
+                                <a href="{% url 'dogs:dog_read' dog.pk %}" class="btn btn-primary w-100 mb-2">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center">У этого пользователя нет собак.</p>
+            {% endfor %}
+        </div>
+
+        <a href="{% url 'users:user_list' %}" class="btn btn-primary mt-3">Вернуться к списку пользователей</a>
+    </div>
+{% endblock %}

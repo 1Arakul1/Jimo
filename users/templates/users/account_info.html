@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h1 class="text-center mb-4">Информация об аккаунте</h1>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Данные аккаунта</h5>
+        <p class="card-text"><strong>Имя пользователя:</strong> {{ user.username }}</p>
+        <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+        <p class="card-text"><strong>Имя:</strong> {{ user.first_name }}</p>
+        <p class="card-text"><strong>Фамилия:</strong> {{ user.last_name }}</p>
+        <p class="card-text"><strong>Дата регистрации:</strong> {{ user.date_joined }}</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

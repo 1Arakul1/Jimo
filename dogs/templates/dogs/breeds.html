@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1 class="text-center mb-4">{{ title }}</h1>
+    <div class="container">
+        <div class="row">
+            {% for breed_data in breeds_data %}
+                {% with breed=breed_data.breed %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <img 
+                                src="{% if breed.image %}{{ breed.image.url }}{% else %}{% static 'images/default_breed.png' %}{% endif %}" 
+                                alt="{{ breed.name }}" 
+                                class="card-img-top" 
+                                style="max-height: 200px; object-fit: contain;"
+                            >
+                            <div class="card-body">
+                                <h5 class="card-title">{{ breed.name }}</h5>
+                                {% if breed.description %}
+                                    <p class="card-text">{{ breed.description }}</p>
+                                {% endif %}                                
+                            </div>
+                        </div>
+                    </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+
+

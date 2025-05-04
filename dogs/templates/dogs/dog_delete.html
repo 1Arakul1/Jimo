@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Удалить собаку?</h1>
+    <p>Вы уверены, что хотите удалить собаку "{{ dog.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Удалить</button>
+        <a href="{% url 'dogs:dog_read' pk=dog.pk %}" class="btn btn-secondary">Отмена</a>  {# Или другой URL для отмены #}
+    </form>
+{% endblock %}

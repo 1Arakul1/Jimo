@@ -1,0 +1,8 @@
+<!-- templates/users/welcome.html -->
+{% extends "base.html" %}  <!-- Или ваш основной шаблон -->
+
+{% block content %}
+    <h1>Мы рады вас видеть, {{ user.username }}!</h1>
+    <p>Добро пожаловать обратно в наш питомник!</p>
+    <a href="{% url 'dogs:index' %}">Перейти на главную страницу</a>
+{% endblock %}

@@ -1,0 +1,16 @@
+<!-- dogs/dog_update.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Редактирование собаки</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ pedigree_formset.management_form }}
+        {% for form in pedigree_formset %}
+            <p>Родословная:</p>
+            {{ form.as_p }}
+        {% endfor %}
+        <button type="submit">Сохранить изменения</button>
+    </form>
+{% endblock %}

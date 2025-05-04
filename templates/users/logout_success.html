@@ -1,0 +1,9 @@
+<!-- templates/users/logout_success.html -->
+{% extends "base.html" %}  <!-- Или ваш основной шаблон -->
+
+{% block content %}
+    <h1>Вы успешно вышли из профиля!</h1>
+    <p>Скорее возвращайтесь!</p>
+    <a href="{% url 'users:user_login' %}">Войти снова</a> |
+    <a href="{% url 'dogs:index' %}">Перейти на главную страницу</a>
+{% endblock %}

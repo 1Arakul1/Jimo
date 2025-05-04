@@ -1,0 +1,113 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap CSS (CDN) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Custom styles -->
+    <link href="{% static 'css/album.css' %}" rel="stylesheet">
+  
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dogs:index' %}">Питомник</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dogs:index' %}">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dogs:breeds' %}">Породы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dogs:dogs_list' %}">Собаки</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dogs:dog_create' %}">Добавить собаку</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:user_profile' %}">Профиль</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:logout' %}">Выход</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:user_login' %}">Вход</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main role="main" class="container">
+    {% if messages %}
+        <div class="container mt-3">
+            <ul class="list-unstyled">
+                {% for message in messages %}
+                    <li class="alert alert-info">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    
+    {% block content %}
+    {% endblock %}
+</main>
+
+<footer class="text-muted py-3">
+    <div class="container">
+        <p class="float-right">
+            <a href="#">Наверх</a>
+        </p>
+        <p>Пример питомника</p>
+    </div>
+</footer>
+
+<!-- jQuery and Bootstrap (CDN) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwQrGsZBaWqVCQRpFjpvV8KbskFY" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Holder.js (CDN) - optional for placeholder images -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.9/holder.min.js" integrity="sha512-qN49TrH7yv2fM43f4F1W/0/V78D280Y9VjU096kUf0i20V9B1E1O9G/1eR7/9                    +bX0+s/1zY1yQ3eIu9T8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    $(function () {
+        var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'))
+        triggerTabList.forEach(function (triggerEl) {
+            var tabTrigger = new bootstrap.Tab(triggerEl)
+
+            triggerEl.addEventListener('click', function (event) {
+                event.preventDefault()
+                tabTrigger.show()
+            })
+        })
+    })
+</script>
+</body>
+</html>
+
+
+
+

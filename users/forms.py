@@ -6,7 +6,17 @@ from .models import User  # Важно: импортируем вашу каст
 class LoginForm(AuthenticationForm):
     """
     Форма для входа пользователя.
-    Использует AuthenticationForm из django.contrib.auth.forms для обработки аутентификации.
+
+    Наследует:
+        AuthenticationForm:  Стандартная форма аутентификации Django.
+
+    Поля:
+        username:  Имя пользователя (TextInput).
+        password:  Пароль (PasswordInput).
+
+    Виджеты:
+        TextInput:  Виджет для ввода имени пользователя.
+        PasswordInput:  Виджет для ввода пароля.
     """
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='Имя пользователя')
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label='Пароль')
@@ -14,7 +24,16 @@ class LoginForm(AuthenticationForm):
 class RegisterForm(UserCreationForm):
     """
     Форма для регистрации нового пользователя.
-    Наследуется от UserCreationForm и добавляет поле email.
+
+    Наследует:
+        UserCreationForm:  Стандартная форма создания пользователя Django.
+
+    Поля:
+        email:  Электронная почта (EmailField).
+
+    Методы:
+        clean_username():  Проверяет, что имя пользователя не занято.
+        save(commit=True):  Сохраняет пользователя, включая email.
     """
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), label='Email')
 
@@ -25,6 +44,12 @@ class RegisterForm(UserCreationForm):
     def clean_username(self):
         """
         Проверяет, что имя пользователя еще не занято.
+
+        Raises:
+            forms.ValidationError:  Если имя пользователя уже занято.
+
+        Returns:
+            str:  Очищенное имя пользователя.
         """
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
@@ -34,6 +59,12 @@ class RegisterForm(UserCreationForm):
     def save(self, commit=True):
         """
         Сохраняет пользователя.
+
+        Args:
+            commit (bool):  Флаг, указывающий, нужно ли сохранять объект в базу данных.
+
+        Returns:
+            User:  Созданный пользователь.
         """
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']  # Сохраняем email
@@ -44,7 +75,15 @@ class RegisterForm(UserCreationForm):
 class EditProfileForm(UserChangeForm):
     """
     Форма для редактирования профиля пользователя.
-    Наследуется от UserChangeForm и позволяет изменять email. Удалены first_name и last_name.
+
+    Наследует:
+        UserChangeForm:  Стандартная форма изменения пользователя Django.
+
+    Поля:
+        email:  Электронная почта (EmailField).
+
+    Методы:
+        __init__(*args, **kwargs):  Инициализация формы, убирает help_text для полей.
     """
     password = None  # Убираем поле password из формы
 
@@ -55,9 +94,23 @@ class EditProfileForm(UserChangeForm):
         fields = ('email',)
 
     def __init__(self, *args, **kwargs):
+        """
+        Инициализация формы.
+
+        Убирает help_text для полей.
+        """
         super().__init__(*args, **kwargs)
         # Убираем help_text для полей (необязательно)
         self.fields['email'].help_text = None
 
 class PasswordResetRequestForm(forms.Form):
+    """
+    Форма для запроса сброса пароля.
+
+    Поля:
+        email:  Электронная почта (EmailField).
+
+    Виджеты:
+        EmailInput:  Виджет для ввода электронной почты.
+    """
     email = forms.EmailField(label="Email", max_length=254, widget=forms.EmailInput(attrs={'class': 'form-control'}))

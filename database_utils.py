@@ -1,16 +1,25 @@
 #!/usr/bin/env python
-print ("СТАРТ") # <---
-import os # <---
+"""
+Скрипт для создания базы данных MS SQL Server.
+
+Этот скрипт предназначен для создания базы данных MS SQL Server, если она не существует.
+Он использует параметры подключения, указанные в файле .env.
+"""
+print ("СТАРТ")
+import os
 import pyodbc
 from dotenv import load_dotenv
 
 def create_database():
     """
     Создает базу данных MS SQL Server, если она не существует.
+    
+    Считывает параметры подключения из переменных окружения, загруженных из .env файла.
+    Проверяет, существует ли база данных с указанным именем, и, если нет, создает ее.
     """
     load_dotenv()
 
-    db_name = os.getenv("DJANGO_DATABASE_NAME", "Bony")  # Имя базы данных из env, по умолчанию "Собачки"
+    db_name = os.getenv("DJANGO_DATABASE_NAME", "Bony")  # Имя базы данных из env, по умолчанию "Bony"
     db_user = os.getenv("DJANGO_DATABASE_USER")
     db_password = os.getenv("DJANGO_DATABASE_PASSWORD")
     db_host = os.getenv("DJANGO_DATABASE_HOST")

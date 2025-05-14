@@ -1,6 +1,6 @@
 from pathlib import Path
 import os
-import sys  # Добавьте эту строку
+import sys
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -10,10 +10,30 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'users'))
 
 # Load environment variables from .env file
 load_dotenv()
+"""
+Загрузка настроек проекта Django.
 
+Этот модуль содержит конфигурацию Django, включая:
+- Пути к проекту.
+- Загрузку переменных окружения из .env.
+- Секретные ключи и настройки отладки.
+- Установленные приложения и middleware.
+- Настройки шаблонов.
+- Настройки базы данных (MSSQL).
+- Валидацию паролей.
+- Интернационализацию и локализацию.
+- Настройки статических и медиа файлов.
+- Настройки аутентификации, включая URL для входа и перенаправления.
+- Настройки электронной почты (Yandex).
+- Настройки кэширования (Redis).
+- Настройки логирования.
+
+Использует переменные окружения для большей гибкости и безопасности.
+"""
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'e2mj4k7r9xgfvzwyuhqbdpci5n3tlsao681f0jesrm2qnxlopyy')
-DEBUG = True  # В production должно быть False
+DEBUG = True
+  # В production должно быть False
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.1.2', '178.206.254.190']  # Замени на свой IP
 
 # Application definition

@@ -3,32 +3,58 @@
 
 {% block content %}
     <h1 class="text-center mb-4">{{ title }}</h1>
+
+    <!-- Форма поиска -->
+    <div class="container mb-3">
+        <form method="get" action="{% url 'dogs:breeds' %}" class="form-inline">
+            <div class="input-group">
+                <input class="form-control" type="search" placeholder="Поиск породы" aria-label="Search" name="q" value="{{ search_query }}">
+                <button class="btn btn-outline-success" type="submit">Найти</button>
+            </div>
+        </form>
+    </div>
+
     <div class="container">
         <div class="row">
             {% for breed_data in breeds_data %}
                 {% with breed=breed_data.breed %}
                     <div class="col-md-4 mb-4">
                         <div class="card">
-                            <img 
-                                src="{% if breed.image %}{{ breed.image.url }}{% else %}{% static 'images/default_breed.png' %}{% endif %}" 
-                                alt="{{ breed.name }}" 
-                                class="card-img-top" 
+                            <img
+                                src="{% if breed.image %}{{ breed.image.url }}{% else %}{% static 'images/default_breed.png' %}{% endif %}"
+                                alt="{{ breed.name }}"
+                                class="card-img-top"
                                 style="max-height: 200px; object-fit: contain;"
                             >
                             <div class="card-body">
                                 <h5 class="card-title">{{ breed.name }}</h5>
                                 {% if breed.description %}
                                     <p class="card-text">{{ breed.description }}</p>
-                                {% endif %}                                
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 {% endwith %}
             {% endfor %}
         </div>
+
+        <!-- Пагинация -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if breeds_data.has_previous %}
+                    <a href="?page=1&q={{ search_query }}">&laquo; first</a>
+                    <a href="?page={{ breeds_data.previous_page_number }}&q={{ search_query }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ breeds_data.number }} of {{ breeds_data.paginator.num_pages }}.
+                </span>
+
+                {% if breeds_data.has_next %}
+                    <a href="?page={{ breeds_data.next_page_number }}&q={{ search_query }}">next</a>
+                    <a href="?page={{ breeds_data.paginator.num_pages }}&q={{ search_query }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
     </div>
 {% endblock %}
-
-
-
-

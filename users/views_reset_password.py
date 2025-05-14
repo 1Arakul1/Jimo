@@ -12,11 +12,33 @@ from django.utils.html import format_html
 User = get_user_model()
 
 def generate_random_password(length=12):
-    alphabet = string.ascii_letters + string.digits # Только буквы и цифры
+    """
+    Генерирует случайный пароль заданной длины, состоящий только из букв и цифр.
+
+    Args:
+        length (int): Длина пароля.
+
+    Returns:
+        str: Сгенерированный пароль.
+    """
+    alphabet = string.ascii_letters + string.digits # Only letters and digits
     password = ''.join(secrets.choice(alphabet) for i in range(length))
     return password
 
 def password_reset_request(request):
+    """
+    Представление для запроса сброса пароля.
+
+    Обрабатывает отправку формы PasswordResetRequestForm, генерирует новый пароль,
+    отправляет его пользователю по электронной почте и перенаправляет на страницу входа.
+
+    Args:
+        request: Объект запроса.
+
+    Returns:
+        HttpResponse: Отображает форму запроса сброса пароля или перенаправляет
+                      на страницу входа с сообщением об успехе.
+    """
     if request.method == "POST":
         form = PasswordResetRequestForm(request.POST)
         if form.is_valid():
@@ -41,7 +63,7 @@ def password_reset_request(request):
             )
             from_email = settings.DEFAULT_FROM_EMAIL
             recipient_list = [user.email]
-            send_mail(subject, message, from_email, recipient_list)
+            send_mail(subject, message, from_email, recipient_list, fail_silently=False) # Добавил fail_silently
 
             messages.success(request, "Новый пароль отправлен на ваш email.")
             return redirect('users:user_login')  # Перенаправляем на страницу входа

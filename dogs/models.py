@@ -1,3 +1,4 @@
+# dogs/models.py
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -5,23 +6,37 @@ from datetime import date
 from django.utils.html import format_html  # Для отображения HTML в админке
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
+import uuid  # Import UUID
+from django.utils.text import slugify
 
 class Review(models.Model):
-    dog = models.ForeignKey('Dog', on_delete=models.CASCADE, related_name='reviews')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    text = models.TextField()
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-    created_at = models.DateTimeField(auto_now_add=True)
+    """
+    Модель для хранения отзывов о собаках.
+    """
+    dog = models.ForeignKey('Dog', on_delete=models.CASCADE, related_name='reviews', verbose_name='Собака')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
+    text = models.TextField(verbose_name='Текст отзыва')
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], verbose_name='Рейтинг')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
 
     def __str__(self):
         return f'Отзыв от {self.user.username} о {self.dog.name}'
 
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+
 User = get_user_model()
 
 class Breed(models.Model):
+    """
+    Модель для хранения информации о породах собак.
+    """
     name = models.CharField(max_length=100, verbose_name='Название породы', unique=True)
     description = models.TextField(blank=True, null=True, verbose_name='Описание породы')
     image = models.ImageField(upload_to='breed_images/', blank=True, null=True, verbose_name='Изображение породы')
+    slug = models.SlugField(max_length=255, unique=True, blank=True, verbose_name='Slug')
 
     def __str__(self):
         return self.name
@@ -30,7 +45,18 @@ class Breed(models.Model):
         verbose_name = 'Порода'
         verbose_name_plural = 'Породы'
 
+    def save(self, *args, **kwargs):
+        """
+        Автоматически генерирует slug при сохранении, если он не задан.
+        """
+        if not self.slug:
+            self.slug = slugify(self.name) + "-" + str(uuid.uuid4())[:8]
+        super().save(*args, **kwargs)
+
 class Dog(models.Model):
+    """
+    Модель для хранения информации о собаках.
+    """
     name = models.CharField(max_length=100, verbose_name='Кличка')
     breed = models.ForeignKey(Breed, on_delete=models.CASCADE, related_name='dogs', verbose_name='Порода')
     age = models.PositiveIntegerField(verbose_name='Возраст')
@@ -38,18 +64,28 @@ class Dog(models.Model):
     image = models.ImageField(upload_to='dog_images/', blank=True, null=True, verbose_name='Фотография')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='dogs', verbose_name='Владелец')
     birth_date = models.DateField(verbose_name='Дата рождения', null=True, blank=True)
-
-    views_count = models.PositiveIntegerField(default=0, verbose_name='Количество просмотров') # Добавлено поле счетчика просмотров
+    slug = models.SlugField(max_length=255, unique=True, blank=True, verbose_name='Slug')
+    views_count = models.PositiveIntegerField(default=0, verbose_name='Количество просмотров')
 
     def __str__(self):
         return self.name
 
     def clean(self):
+        """
+        Валидирует модель перед сохранением.
+
+        Проверяет, что дата рождения не находится в будущем.
+        """
         if self.birth_date and self.birth_date > date.today():
             raise ValidationError('Дата рождения не может быть в будущем.')
 
     def save(self, *args, **kwargs):
+        """
+        Сохраняет модель, предварительно выполнив валидацию и сгенерировав slug, если он не задан.
+        """
         self.clean()
+        if not self.slug:
+            self.slug = slugify(self.name) + "-" + str(uuid.uuid4())[:8]
         super().save(*args, **kwargs)
 
     class Meta:
@@ -60,6 +96,9 @@ class Dog(models.Model):
         ]
 
 class Pedigree(models.Model):
+    """
+    Модель для хранения информации о родословной собаки.
+    """
     dog = models.ForeignKey(Dog, on_delete=models.CASCADE, related_name='pedigrees', verbose_name='Собака')
     father = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отец')
     mother = models.CharField(max_length=100, blank=True, null=True, verbose_name='Мать')

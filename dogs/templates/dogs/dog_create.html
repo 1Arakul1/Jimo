@@ -1,17 +1,131 @@
-<!-- dogs/dog_create.html -->
 {% extends 'base.html' %}
+{% load static %}  {# Загрузите static для работы со статическими файлами #}
 
 {% block content %}
-    <h1>{{ title }}</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {{ pedigree_formset.management_form }}
-        {% for form in pedigree_formset %}
-            <p>Родословная:</p>
-            {{ form.as_p }}
-        {% endfor %}
-        <button type="submit">Добавить собаку</button>
-    </form>
-{% endblock %}
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Добавить новую собаку</h1>
 
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label for="{{ form.name.id_for_label }}" class="form-label">Кличка</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.name.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="mb-3">
+                <label for="{{ form.breed.id_for_label }}" class="form-label">Порода</label>
+                {{ form.breed }}
+                {% if form.breed.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.breed.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="mb-3">
+                <label for="{{ form.age.id_for_label }}" class="form-label">Возраст</label>
+                {{ form.age }}
+                {% if form.age.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.age.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="mb-3">
+                <label for="{{ form.birth_date.id_for_label }}" class="form-label">Дата рождения</label>
+                {{ form.birth_date }}
+                {% if form.birth_date.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.birth_date.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="mb-3">
+                <label for="{{ form.description.id_for_label }}" class="form-label">Описание</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.description.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="mb-3">
+                <label for="{{ form.image.id_for_label }}" class="form-label">Фотография</label>
+                {{ form.image }}
+                {% if form.image.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.image.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              <hr>
+
+              <h5 class="mb-3">Родословная</h5>
+              {{ pedigree_formset.management_form }}
+              {% for form in pedigree_formset %}
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <h6 class="card-title">Информация о предках</h6>
+                    <div class="mb-3">
+                      <label for="{{ form.father.id_for_label }}" class="form-label">Отец</label>
+                      {{ form.father }}
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="{{ form.mother.id_for_label }}" class="form-label">Мать</label>
+                      {{ form.mother }}
+                    </div>
+                    <div class="mb-3">
+                      <label for="{{ form.grand_father_father.id_for_label }}" class="form-label">Дедушка по отцу</label>
+                      {{ form.grand_father_father }}
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="{{ form.grand_mother_father.id_for_label }}" class="form-label">Бабушка по отцу</label>
+                      {{ form.grand_mother_father }}
+                    </div>
+                    <div class="mb-3">
+                      <label for="{{ form.grand_father_mother.id_for_label }}" class="form-label">Дедушка по матери</label>
+                      {{ form.grand_father_mother }}
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="{{ form.grand_mother_mother.id_for_label }}" class="form-label">Бабушка по матери</label>
+                      {{ form.grand_mother_mother }}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+              <button type="submit" class="btn btn-primary">Добавить собаку</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

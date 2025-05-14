@@ -34,7 +34,7 @@
                                 <p class="card-text mb-2">{{ dog.description }}</p>
                             </div>
                             <div class="mt-auto">
-                                <a href="{% url 'dogs:dog_read' dog.pk %}" class="btn btn-primary w-100 mb-2">Подробнее</a>
+                               <a href="{% url 'dogs:dog_read' slug=dog.slug %}" class="btn btn-primary w-100 mb-2">Подробнее</a> 
                             </div>
                         </div>
                     </div>

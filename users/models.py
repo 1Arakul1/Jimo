@@ -4,15 +4,20 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    # Дополнительные поля
-    phone_number = models.CharField(max_length=20, blank=True, null=True)
-    is_premium = models.BooleanField(default=False)
-    # Новые поля:
-    address = models.CharField(max_length=255, blank=True, null=True)
-    birth_date = models.DateField(blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
+    """
+    Расширенная модель пользователя, наследующая AbstractUser.
 
-    email = models.EmailField(unique=True, verbose_name='email address') # Added unique=True
+    Добавляет дополнительные поля для хранения информации о пользователе.
+    """
+    # Дополнительные поля
+    phone_number = models.CharField(max_length=20, blank=True, null=True, verbose_name='Номер телефона')
+    is_premium = models.BooleanField(default=False, verbose_name='Премиум аккаунт')
+    # Новые поля:
+    address = models.CharField(max_length=255, blank=True, null=True, verbose_name='Адрес')
+    birth_date = models.DateField(blank=True, null=True, verbose_name='Дата рождения')
+    city = models.CharField(max_length=100, blank=True, null=True, verbose_name='Город')
+
+    email = models.EmailField(unique=True, verbose_name='email address') # Added unique=True,  unique=True означает что поле должно быть уникальным
 
     groups = models.ManyToManyField(
         'auth.Group',
@@ -32,13 +37,22 @@ class User(AbstractUser):
     )
 
     def __str__(self):
+        """
+        Возвращает строковое представление объекта User (username).
+        """
         return self.username
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    """
+    Модель для представления продукта.
+    """
+    name = models.CharField(max_length=200, verbose_name='Название')
+    description = models.TextField(blank=True, verbose_name='Описание')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
 
     def __str__(self):
+        """
+        Возвращает строковое представление объекта Product (name).
+        """
         return self.name
